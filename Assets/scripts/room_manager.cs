@@ -300,6 +300,44 @@ public class room_manager : MonoBehaviour
 					cx = dx;
 					cy = dy;
 				}
+
+				cx = fx;
+				cy = fy;
+				while ( cx != hsize || cy != hsize )
+				{
+					var o = offsets[ helper.inverse_direction( paths[ cx, cy ] ) ];
+					var odx = cx + o.x;
+					var ody = cy + o.y;
+
+					foreach ( KeyValuePair<direction, offset> p in offsets )
+					{
+						int dx = odx + p.Value.x, dy = ody + p.Value.y;
+						if ( this.on_grid( dx, dy ) && rooms[ dx, dy ].GetType() != typeof( room_end ) )
+						{
+							bool valid = false;
+							if ( rooms[ dx, dy ].GetType() != typeof( room_end ) )
+							{
+								foreach ( KeyValuePair<direction, room> pr in rooms[ dx, dy ].adjancent_rooms )
+								{
+									if ( pr.Value != null )
+									{
+										valid = true;
+										break;
+									}
+								}
+							}
+
+							if ( ( valid && Random.Range( 0, 3 ) == 0 ) || Random.Range(0, 5) == 0 )
+							{
+								join_rooms( rooms[ odx, ody ], rooms[ dx, dy ], p.Key );
+							}
+						}
+
+					}
+
+					cx = odx;
+					cy = ody;
+				}
 			}
 
 			this.completed = true;

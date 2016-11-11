@@ -125,6 +125,8 @@ public class player_movement : MonoBehaviour
 		{
 			var pos = this.transform.position + this.movement_offset[ this.direction ] * this.speed;
 			this.r2d2.MovePosition( pos );
+
+			this.anim.Play( this.animation_walk[ this.direction ] );
 		}
 		else if ( !this.has_control )
 		{

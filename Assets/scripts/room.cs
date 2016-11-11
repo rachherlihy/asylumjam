@@ -3,6 +3,20 @@ using System.Collections.Generic;
 
 public class room
 {
+	static int i = 0;
+
+	public room()
+	{
+		i++;
+		Debug.Log( i );
+	}
+
+	~room()
+	{
+		i--;
+		Debug.Log( i );
+	}
+
 	public Dictionary<direction, room> adjancent_rooms = new Dictionary<direction, room>()
 	{
 		{ direction.up, null },
