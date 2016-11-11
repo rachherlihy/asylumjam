@@ -21,3 +21,40 @@ public class room
 	{
 	}
 }
+
+public class room_start : room
+{
+}
+
+public class room_end : room
+{
+	public override void on_enter()
+	{
+		state_manager.add_queue(
+			new room_manager.take_control(),
+			fade.create_fade_out( 1.0f )
+		);
+	}
+}
+
+public enum room_type  { kitchen, lounge, bathroom, basement, bedroom }
+
+public class room_kitchen : room
+{
+}
+
+public class room_lounge : room
+{
+}
+
+public class room_bathroom : room
+{
+}
+
+public class room_basement : room
+{
+}
+
+public class room_bedroom : room
+{
+}

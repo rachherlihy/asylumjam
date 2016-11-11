@@ -14,6 +14,8 @@ public class room_manager : MonoBehaviour
 	};
 
 	room current_room;
+	room start_room;
+	room end_room;
 
 	SpriteRenderer sr_floor;
 
@@ -40,13 +42,9 @@ public class room_manager : MonoBehaviour
 
 		this.sr_floor = this.GetComponent<SpriteRenderer>();
 
-		var a = new room();
-		var b = new room();
-
-		join_rooms( a, b, direction.left );
-
 		state_manager.add_queue(
-			new change_room( this, a ),
+			new generate_rooms( this, 5 ),
+			new change_start_room(),
 			fade.create_fade_in( 1.0f ),
 			new give_control()
 		);
@@ -71,7 +69,7 @@ public class room_manager : MonoBehaviour
 				new lock_room_change( this, true ),
 				new take_control(),
 				fade.create_fade_out( 0.5f ),
-				new change_room( this, _room ),
+				new change_room( _room ),
 				new invert_position( _direction ),
 				fade.create_fade_in( 0.5f ),
 				new give_control(),
@@ -100,7 +98,7 @@ public class room_manager : MonoBehaviour
 		this.sr_floor.sprite = this.current_room.floor_sprite;
 	}
 
-	class take_control : state
+	public class take_control : state
 	{
 		public override void update()
 		{
@@ -109,7 +107,7 @@ public class room_manager : MonoBehaviour
 		}
 	}
 
-	class give_control : state
+	public class give_control : state
 	{
 		public override void update()
 		{
@@ -159,32 +157,148 @@ public class room_manager : MonoBehaviour
 
 	class change_room : state
 	{
-		room_manager rm;
 		room to;
 
-		public change_room( room_manager _rm, room _to )
+		public change_room( room _to )
 		{
-			this.rm = _rm;
 			this.to = _to;
 		}
 
 
 		public override void update()
 		{
-			if ( rm != null )
+			if ( room_manager.instance != null )
 			{
-				if ( this.rm.current_room != null )
+				if ( room_manager.instance.current_room != null )
 				{
-					this.rm.current_room.on_exit();
-					this.rm.unload_room();
+					room_manager.instance.current_room.on_exit();
+					room_manager.instance.unload_room();
 				}
 
-				this.rm.current_room = to;
+				room_manager.instance.current_room = to;
 
-				if ( this.rm.current_room != null )
+				if ( room_manager.instance.current_room != null )
 				{
-					this.rm.load_room();
-					this.rm.current_room.on_enter();
+					room_manager.instance.load_room();
+					room_manager.instance.current_room.on_enter();
+				}
+			}
+
+			this.completed = true;
+		}
+	}
+
+	class change_start_room : state
+	{
+		public override void update()
+		{
+			var cr = new change_room( room_manager.instance.start_room );
+			cr.update();
+
+			this.completed = true;
+		}
+	}
+
+	class generate_rooms : state
+	{
+		struct offset
+		{
+			public int x;
+			public int y;
+
+			public offset( int _x, int _y )
+			{
+				this.x = _x;
+				this.y = _y;
+			}
+		}
+
+		static Dictionary<direction, offset> offsets = new Dictionary<direction, offset>()
+		{
+			{direction.up, new offset( 0, 1 ) },
+			{direction.down, new offset( 0, -1 ) },
+			{direction.left, new offset( -1, 0 ) },
+			{direction.right, new offset( 1, 0 ) },
+		};
+
+		room_manager rm;
+		int size;
+
+		public generate_rooms( room_manager _rm, int _size )
+		{
+			this.rm = _rm;
+			this.size = _size;
+		}
+
+		bool on_grid( int x, int y )
+		{
+			return 0 <= x && x < this.size && 0 <= y && y < this.size;
+		}
+
+		public override void update()
+		{
+			int hsize = this.size / 2;
+			room[ , ] rooms = new room[ this.size, this.size ];
+
+			// Populate initial grid with rooms
+			for ( int x = 0; x < this.size; x++ )
+			{
+				for ( int y = 0; y < this.size; y++ )
+				{
+					rooms[ x, y ] = helper.create_random_room();
+				}
+			}
+			
+			// Set the start room
+			rooms[ hsize, hsize ] = new room_start();
+			this.rm.start_room = rooms[ hsize, hsize ];
+			Debug.Log( this.rm.start_room );
+
+			// Calculate the position of the end room
+			int fx = hsize, fy = hsize;
+			while ( fx == hsize && fy == hsize )
+			{
+				fx = Random.Range( 0, this.size );
+				fy = Random.Range( 0, this.size );
+			}
+
+			rooms[ fx, fy ] = new room_end();
+			this.rm.end_room = rooms[ fx, fy ];
+
+			{
+				direction[, ] paths = new direction[ this.size, this.size ];
+
+				int cx = hsize, cy = hsize;
+				while ( cx != fx || cy != fy )
+				{
+					var dir = helper.random_enum_excluding( direction.none );
+
+					var o = offsets[ dir ];
+					var dx = cx + o.x;
+					var dy = cy + o.y;
+
+					if ( this.on_grid( dx, dy ) )
+					{
+						cx = dx;
+						cy = dy;
+
+						if ( paths[ cx, cy ] == direction.none )
+						{
+							paths[ cx, cy ] = dir;
+						}
+					}
+				}
+
+				while ( cx != hsize || cy != hsize )
+				{
+					var o = offsets[ helper.inverse_direction( paths[ cx, cy ] ) ];
+					var dx = cx + o.x;
+					var dy = cy + o.y;
+
+					join_rooms( rooms[ dx, dy ], rooms[ cx, cy ], paths[ cx, cy ] );
+
+					cx = dx;
+					cy = dy;
 				}
 			}
 
