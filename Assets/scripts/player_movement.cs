@@ -30,11 +30,30 @@ public class player_movement : MonoBehaviour
 		{direction.right, new Vector3(1.0f, 0.0f) },
 	};
 
+	Dictionary<direction, string> animation_idle = new Dictionary<direction, string>()
+	{
+		{direction.none, "spidle_front" },
+		{direction.up, "spidle_back" },
+		{direction.down, "spidle_front" },
+		{direction.left, "spidle_left" },
+		{direction.right, "spidle_right" },
+	};
+
+	Dictionary<direction, string> animation_walk = new Dictionary<direction, string>()
+	{
+		{direction.up, "spalk_back" },
+		{direction.down, "spalk_front" },
+		{direction.left, "spalk_left" },
+		{direction.right, "spalk_right" },
+	};
+
 	Rigidbody2D r2d2;
+	Animator anim;
 
 	// Use this for initialization
 	void Start () {
 		this.r2d2 = this.GetComponent<Rigidbody2D>();
+		this.anim = this.GetComponent<Animator>();
 	}
 	
 	// Update is called once per frame
@@ -64,6 +83,7 @@ public class player_movement : MonoBehaviour
 			if ( this.direction == direction.none )
 			{
 				this.direction = _kp;
+				this.anim.Play( this.animation_walk[ this.direction ] );
 			}
 			else
 			{
@@ -82,9 +102,12 @@ public class player_movement : MonoBehaviour
 				{
 					this.direction = this.input_queue[ 0 ];
 					this.input_queue.RemoveAt( 0 );
+
+					this.anim.Play( this.animation_walk[ this.direction ] );
 				}
 				else
 				{
+					this.anim.Play( this.animation_idle[ this.direction ] );
 					this.direction = direction.none;
 				}
 			}
@@ -101,7 +124,11 @@ public class player_movement : MonoBehaviour
 		if ( this.has_control && this.direction != direction.none )
 		{
 			var pos = this.transform.position + this.movement_offset[ this.direction ] * this.speed;
-            this.r2d2.MovePosition( pos );
+			this.r2d2.MovePosition( pos );
+		}
+		else if ( !this.has_control )
+		{
+			this.anim.Play( this.animation_idle[ this.direction ] );
 		}
 	}
 

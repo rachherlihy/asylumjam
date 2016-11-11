@@ -460,7 +460,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   has_control: 0
   debug_text: {fileID: 0}
-  speed: 0.1
+  speed: 0.03
 --- !u!212 &1844732444
 SpriteRenderer:
   m_ObjectHideFlags: 0

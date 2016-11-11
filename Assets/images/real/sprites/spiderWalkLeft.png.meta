@@ -1,13 +1,13 @@
 fileFormatVersion: 2
-guid: 870cff5b259c95c4b85c9552b36dc0ec
-timeCreated: 1478871079
+guid: 83f041982da439b4eab919bc94c528eb
+timeCreated: 1478871111
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: spiderIdleback_strip4_0
-    21300002: spiderIdleback_strip4_1
-    21300004: spiderIdleback_strip4_2
-    21300006: spiderIdleback_strip4_3
+    21300000: spiderWalkLeft_0
+    21300002: spiderWalkLeft_1
+    21300004: spiderWalkLeft_2
+    21300006: spiderWalkLeft_3
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -57,7 +57,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: spiderIdleback_strip4_0
+      name: spiderWalkLeft_0
       rect:
         serializedVersion: 2
         x: 0
@@ -70,7 +70,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spiderIdleback_strip4_1
+      name: spiderWalkLeft_1
       rect:
         serializedVersion: 2
         x: 64
@@ -83,7 +83,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spiderIdleback_strip4_2
+      name: spiderWalkLeft_2
       rect:
         serializedVersion: 2
         x: 128
@@ -96,7 +96,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spiderIdleback_strip4_3
+      name: spiderWalkLeft_3
       rect:
         serializedVersion: 2
         x: 192
