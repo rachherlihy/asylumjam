@@ -109,7 +109,7 @@ public class room_end : room
 			new room_manager.take_control(),
 			new room_manager.remove_doors(),
 			new room_manager.set_player_position( new Vector3( -0.25f, -2.18f ) ),
-			new room_manager.set_player_animation( "spidle_back" ),
+			new player_movement.set_default_anim("spidle_back"),
 			new player.reset_off_tile(),
 			fade.create_fade_in( 2.0f ),
 			new room_manager.start_final_animation()

@@ -79,6 +79,7 @@ public class room_manager : MonoBehaviour
 		state_manager.add_queue(
 			new generate_rooms( this, 5 ),
 			new change_start_room(),
+			new player_movement.set_default_anim( "spidle_front" ),
 			fade.create_fade_in( 1.0f ),
 			new give_control()
 		);

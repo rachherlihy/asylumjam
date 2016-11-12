@@ -160,4 +160,20 @@ public class player_movement : MonoBehaviour
 			this.transform.position = new Vector3( 0.0f, -position.y );
 		}
 	}
+
+	public class set_default_anim : state
+	{
+		string animation;
+
+		public set_default_anim( string animation )
+		{
+			this.animation = animation;
+		}
+
+		public override void update()
+		{
+			player.instance.pm.animation_idle[ direction.none ] = this.animation;
+			this.completed = true;
+        }
+	}
 }
