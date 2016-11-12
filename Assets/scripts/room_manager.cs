@@ -157,7 +157,7 @@ public class room_manager : MonoBehaviour
 
 	class change_room : state
 	{
-		room to;
+		protected room to;
 
 		public change_room( room _to )
 		{
@@ -188,14 +188,17 @@ public class room_manager : MonoBehaviour
 		}
 	}
 
-	class change_start_room : state
+	class change_start_room : change_room
 	{
+		public change_start_room() :
+			base( null )
+		{
+			// ...
+		}
 		public override void update()
 		{
-			var cr = new change_room( room_manager.instance.start_room );
-			cr.update();
-
-			this.completed = true;
+			this.to = room_manager.instance.start_room;
+			base.update();
 		}
 	}
 
@@ -237,35 +240,26 @@ public class room_manager : MonoBehaviour
 
 		public override void update()
 		{
-			int hsize = this.size / 2;
-			room[ , ] rooms = new room[ this.size, this.size ];
-
-			// Populate initial grid with rooms
-			for ( int x = 0; x < this.size; x++ )
+			try
 			{
-				for ( int y = 0; y < this.size; y++ )
+				int hsize = this.size / 2;
+				room[, ] rooms = new room[ this.size, this.size ];
+
+				// Set the start room
+				rooms[ hsize, hsize ] = new room_start();
+				this.rm.start_room = rooms[ hsize, hsize ];
+
+				// Calculate the position of the end room
+				int fx = hsize, fy = hsize;
+				while ( fx == hsize && fy == hsize )
 				{
-					rooms[ x, y ] = helper.create_random_room();
+					fx = Random.Range( 0, this.size );
+					fy = Random.Range( 0, this.size );
 				}
-			}
-			
-			// Set the start room
-			rooms[ hsize, hsize ] = new room_start();
-			this.rm.start_room = rooms[ hsize, hsize ];
-			Debug.Log( this.rm.start_room );
 
-			// Calculate the position of the end room
-			int fx = hsize, fy = hsize;
-			while ( fx == hsize && fy == hsize )
-			{
-				fx = Random.Range( 0, this.size );
-				fy = Random.Range( 0, this.size );
-			}
+				rooms[ fx, fy ] = new room_end();
+				this.rm.end_room = rooms[ fx, fy ];
 
-			rooms[ fx, fy ] = new room_end();
-			this.rm.end_room = rooms[ fx, fy ];
-
-			{
 				direction[, ] paths = new direction[ this.size, this.size ];
 
 				int cx = hsize, cy = hsize;
@@ -289,58 +283,65 @@ public class room_manager : MonoBehaviour
 					}
 				}
 
-				while ( cx != hsize || cy != hsize )
+				cx = fx; cy = fy;
+				for ( int dx = cx, dy = cy; cx != hsize || cy != hsize; cx = dx, cy = dy )
 				{
 					var o = offsets[ helper.inverse_direction( paths[ cx, cy ] ) ];
-					var dx = cx + o.x;
-					var dy = cy + o.y;
+					dx += o.x;
+					dy += o.y;
 
-					join_rooms( rooms[ dx, dy ], rooms[ cx, cy ], paths[ cx, cy ] );
-
-					cx = dx;
-					cy = dy;
-				}
-
-				cx = fx;
-				cy = fy;
-				while ( cx != hsize || cy != hsize )
-				{
-					var o = offsets[ helper.inverse_direction( paths[ cx, cy ] ) ];
-					var odx = cx + o.x;
-					var ody = cy + o.y;
-
-					foreach ( KeyValuePair<direction, offset> p in offsets )
+					if ( rooms[ dx, dy ] == null )
 					{
-						int dx = odx + p.Value.x, dy = ody + p.Value.y;
-						if ( this.on_grid( dx, dy ) && rooms[ dx, dy ].GetType() != typeof( room_end ) )
-						{
-							bool valid = false;
-							if ( rooms[ dx, dy ].GetType() != typeof( room_end ) )
-							{
-								foreach ( KeyValuePair<direction, room> pr in rooms[ dx, dy ].adjancent_rooms )
-								{
-									if ( pr.Value != null )
-									{
-										valid = true;
-										break;
-									}
-								}
-							}
-
-							if ( ( valid && Random.Range( 0, 3 ) == 0 ) || Random.Range(0, 5) == 0 )
-							{
-								join_rooms( rooms[ odx, ody ], rooms[ dx, dy ], p.Key );
-							}
-						}
-
+						rooms[ dx, dy ] = helper.create_random_room();
 					}
 
-					cx = odx;
-					cy = ody;
+					join_rooms( rooms[ dx, dy ], rooms[ cx, cy ], paths[ cx, cy ] );
 				}
-			}
 
-			this.completed = true;
+				cx = fx; cy = fy;
+				for ( int dx = cx, dy = cy; cx != hsize || cy != hsize; cx = dx, cy = dy )
+				{
+					var o = offsets[ helper.inverse_direction( paths[ cx, cy ] ) ];
+					dx += o.x;
+					dy += o.y;
+
+					// If random chance
+					//	pick random adjanct / available node / not end room
+					//		add room if null
+					//		join rooms
+					//		go to random chance
+
+					for ( int rx = dx, ry = dy, px = dx, py = dy, max_rooms = 10; Random.Range( 0, 10 ) != 0 && max_rooms > 0; px = rx, py = ry, max_rooms-- )
+					{
+						var dir = helper.random_enum_excluding( direction.none );
+						var ro = offsets[ dir ];
+						rx += ro.x;
+						ry += ro.y;
+
+						if ( this.on_grid( rx, ry ) )
+						{
+							if ( rooms[ rx, ry ] != null )
+							{
+								if ( rooms[ rx, ry ].GetType() != typeof( room_end ) )
+								{
+									join_rooms( rooms[ px, py ], rooms[ rx, ry ], dir );
+								}
+							}
+							else
+							{
+								rooms[ rx, ry ] = helper.create_random_room();
+								join_rooms( rooms[ px, py ], rooms[ rx, ry ], dir );
+							}
+						}
+					}
+				}
+
+				this.completed = true;
+			}
+			catch ( System.IndexOutOfRangeException )
+            {
+				// ...
+			}
 		}
 	}
 }

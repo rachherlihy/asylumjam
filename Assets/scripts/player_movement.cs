@@ -10,6 +10,7 @@ public class player_movement : MonoBehaviour
 	public Text debug_text;
 
 	public float speed = 5.0f;
+	float prev = 0.0f;
 
 	direction direction = direction.none;
 	List<direction> input_queue = new List<direction>();
@@ -64,6 +65,16 @@ public class player_movement : MonoBehaviour
 		if ( this.debug_text != null )
 		{
 			this.debug_text.text = this.direction.ToString();
+		}
+
+		if ( Input.GetKeyDown( KeyCode.LeftShift ) )
+		{
+			this.prev = this.speed;
+			this.speed = 0.25f;
+		}
+		else if ( Input.GetKeyUp( KeyCode.LeftShift ) )
+		{
+			this.speed = this.prev;
 		}
 	}
 
