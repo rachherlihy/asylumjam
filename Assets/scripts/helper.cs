@@ -9,6 +9,12 @@ public enum direction
 
 public class helper
 {
+	static float offset_x = 32.0f / 120.0f;
+	static float offset_y = 24.0f / 120.0f;
+	static float tile_size = 64.0f / 60.0f;
+	static int tile_x = 10;
+	static int tile_y = 7;
+
 	static Dictionary<direction, direction> reverse_lookup = new Dictionary<direction, direction>()
 	{
 		{direction.up, direction.down },
@@ -26,7 +32,7 @@ public class helper
 	public static room create_random_room()
 	{
 		var v = System.Enum.GetValues( typeof( room_type ) );
-		switch ( random_enum<room_type>() )
+		switch ( random_enum_excluding(room_type.room, room_type.start, room_type.end) )
 		{
 			case room_type.basement:
 				return new room_basement();
@@ -55,5 +61,31 @@ public class helper
 		var r = v.Except( excluding ).ToList();
 
 		return ( T ) r[Random.Range( 0, r.Count() )];
+	}
+
+	public static Vector3 tile_to_world( int x, int y )
+	{
+		float hwidth = (tile_x*tile_size) / 2.0f;
+		float hheight = (tile_y*tile_size) / 2.0f;
+		float hsize = tile_size / 2.0f;
+
+		return new Vector3( x * tile_size - hwidth + hsize - offset_x, y * tile_size - hheight + hsize + offset_y );
+	}
+
+	public static Vector2 world_to_tile( Vector3 p )
+	{
+		float hwidth = ( tile_x * tile_size ) / 2.0f;
+		float hheight = ( tile_y * tile_size ) / 2.0f;
+		float hsize = tile_size / 2.0f;
+
+		return new Vector2(
+			Mathf.RoundToInt( round_tile_space( p.x + hwidth - hsize + offset_x ) / tile_size ),
+			Mathf.RoundToInt( round_tile_space( p.y + hheight - hsize - offset_y ) / tile_size )
+		);
+	}
+
+	public static float round_tile_space( float _value )
+	{
+		return tile_size * Mathf.Round( _value / tile_size );
 	}
 }

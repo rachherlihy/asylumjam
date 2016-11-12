@@ -16,14 +16,16 @@ public class room_manager : MonoBehaviour
 	room current_room;
 	room start_room;
 	room end_room;
-
-	SpriteRenderer sr_floor;
-
+	
 	public Sprite sprite_door;
 	public Sprite floor_a;
 	public Sprite floor_b;
 
 	bool room_changing = false;
+
+	bool started = false;
+	SpriteRenderer[, ] tile_grid = new SpriteRenderer[10,7];
+	SpriteRenderer wall;
 
 	void Start()
 	{
@@ -34,13 +36,47 @@ public class room_manager : MonoBehaviour
 		}
 
 		instance = this;
+	}
 
-		this.doors[ direction.up ] = door.create( direction.up, new Vector3( 0.0f, 5.0f ) );
-		this.doors[ direction.down ] = door.create( direction.down, new Vector3( 0.0f, -5.0f ) );
-		this.doors[ direction.left ] = door.create( direction.left, new Vector3( -6.68f, 0.0f ) );
-		this.doors[ direction.right ] = door.create( direction.right, new Vector3( 6.68f, 0.0f ) );
+	public bool on_tile( int x, int y )
+	{
+		return this.current_room == null ? false : this.current_room.floor[ x, y ] == room.floor_state.a;
+	}
 
-		this.sr_floor = this.GetComponent<SpriteRenderer>();
+	void Update()
+	{
+		state_manager.update();
+	}
+
+	public void start()
+	{
+		this.doors[ direction.up ] = door.create( direction.up, new Vector3( -0.267f, 4.463f ), 0.0f );
+		this.doors[ direction.down ] = door.create( direction.down, new Vector3( -0.267f, -4.07f ), 180.0f );
+		this.doors[ direction.left ] = door.create( direction.left, new Vector3( -6.131f, 0.196f ), 90.0f );
+		this.doors[ direction.right ] = door.create( direction.right, new Vector3( 5.6f, 0.196f ), 270.0f );
+
+		// Create titles
+		{
+			var go = new GameObject( "Tiles" );
+
+			for ( int i = 0; i < 10; i++ )
+			{
+				for ( int j = 0; j < 7; j++ )
+				{
+					var tile = new GameObject( "tile" );
+					this.tile_grid[ i, j ] = tile.AddComponent<SpriteRenderer>();
+
+					tile.transform.SetParent( go.transform );
+					tile.transform.position = helper.tile_to_world( i, j );
+				}
+			}
+		}
+
+		// Create floor
+		{
+			var go = new GameObject( "wall" );
+			this.wall = go.AddComponent<SpriteRenderer>();
+        }
 
 		state_manager.add_queue(
 			new generate_rooms( this, 5 ),
@@ -48,11 +84,23 @@ public class room_manager : MonoBehaviour
 			fade.create_fade_in( 1.0f ),
 			new give_control()
 		);
+
+		this.started = true;
 	}
 
-	void Update()
+	public void end()
 	{
-		state_manager.update();
+		this.doors[ direction.up ] = null;
+		this.doors[ direction.down ] = null;
+		this.doors[ direction.left ] = null;
+		this.doors[ direction.right ] = null;
+
+		state_manager.add_queue(
+			new take_control(),
+			fade.create_fade_out( 1.0f )
+		);
+
+		this.started = false;
 	}
 
 	public static void join_rooms( room a, room b, direction a_connection )
@@ -78,24 +126,53 @@ public class room_manager : MonoBehaviour
 		}
 	}
 
+	void load_room()
+	{
+		this.current_room.on_load();
+
+		foreach ( KeyValuePair<direction, door> pair in this.doors )
+		{
+			pair.Value.set_to( this.current_room.adjancent_rooms[ pair.Key ] );
+			pair.Value.sr.sprite = this.current_room.door;
+		}
+
+		for ( int i = 0; i < 10; i++ )
+		{
+			for ( int j = 0; j < 7; j++ )
+			{
+				tile_grid[ i, j ].sprite = this.current_room.get_sprite( i, j );
+			}
+		}
+
+		this.wall.sprite = this.current_room.wall;
+	}
+
 	void unload_room()
 	{
+		this.current_room.on_unload();
+
 		foreach ( KeyValuePair<direction, door> pair in this.doors )
 		{
 			pair.Value.set_to( null );
 		}
+	}
 
-		this.sr_floor.sprite = null;
-    }
-
-	void load_room()
+	public class start_game : state
 	{
-		foreach ( KeyValuePair<direction, door> pair in this.doors )
+		public override void update()
 		{
-			pair.Value.set_to( this.current_room.adjancent_rooms[ pair.Key ] );
+			room_manager.instance.start();
+			this.completed = true;
 		}
+	}
 
-		this.sr_floor.sprite = this.current_room.floor_sprite;
+	public class end_game : state
+	{
+		public override void update()
+		{
+			room_manager.instance.end();
+			this.completed = true;
+		}
 	}
 
 	public class take_control : state
