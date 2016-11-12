@@ -22,6 +22,9 @@ public class sprite_manager : MonoBehaviour
 	public Sprite vacuum;
 	public Sprite vacuum_spider;
 
+	public Sprite splash;
+	public Sprite menu;
+
 	public static sprite_manager instance;
 
 	// Use this for initialization
