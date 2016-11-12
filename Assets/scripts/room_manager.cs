@@ -315,6 +315,10 @@ public class room_manager : MonoBehaviour
 	{
 		public override void update()
 		{
+			state_manager.add_queue(
+				new spider.drop_in( 4.0f )
+			);
+
 			this.completed = true;
 		}
 	}

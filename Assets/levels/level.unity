@@ -120,6 +120,7 @@ MonoBehaviour:
   sprite_door: {fileID: 21300000, guid: c16318d4ced50134db02aadcf0d94a17, type: 3}
   floor_a: {fileID: 21300000, guid: 82bd15fa3ca6fad45a35fe5ba38955cc, type: 3}
   floor_b: {fileID: 21300000, guid: ec05b7de596edfe40949e4866f77ad7d, type: 3}
+  room_changing: 0
 --- !u!4 &78709779
 Transform:
   m_ObjectHideFlags: 0
@@ -367,6 +368,86 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1966384069}
   m_RootOrder: 3
+--- !u!1 &1007938256
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1007938259}
+  - 95: {fileID: 1007938258}
+  - 212: {fileID: 1007938257}
+  m_Layer: 0
+  m_Name: spider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!212 &1007938257
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1007938256}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedWireframeHidden: 1
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: -1506009757
+  m_SortingOrder: 1000
+  m_Sprite: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+--- !u!95 &1007938258
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1007938256}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c65e6a4786cf67d47b73390ddd06142a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+--- !u!4 &1007938259
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1007938256}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.5141997, y: -0.11380116, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
 --- !u!1 &1188255560
 GameObject:
   m_ObjectHideFlags: 0
@@ -431,13 +512,13 @@ MonoBehaviour:
     wall: {fileID: 21300000, guid: 92529f1496408c04b96c111ede1e1151, type: 3}
     door: {fileID: 21300000, guid: b57702d08297d084dab1d8eaa9c1f210, type: 3}
   - type: 2
-    floor_a: {fileID: 21300000, guid: fb8b14909eea2e644a26b229fe488d69, type: 3}
-    floor_b: {fileID: 21300000, guid: b015cb438864be9449eb74d7478661f0, type: 3}
-    wall: {fileID: 21300000, guid: 3c9799bfc7b503c47ad442c37a5cfd1e, type: 3}
-    door: {fileID: 21300000, guid: d80e66616ce577146a4c64f972890842, type: 3}
+    floor_a: {fileID: 21300000, guid: 4d17d6b36f3473944b4bbe19b823b807, type: 3}
+    floor_b: {fileID: 21300000, guid: 4d17d6b36f3473944b4bbe19b823b807, type: 3}
+    wall: {fileID: 21300000, guid: 8484b8cb514c0d14d9a8f8196e078310, type: 3}
+    door: {fileID: 0}
   - type: 3
-    floor_a: {fileID: 21300000, guid: 95c26400b391c924ab96ff3812c41f9c, type: 3}
-    floor_b: {fileID: 21300000, guid: d62a78c8839208c48b739adbd934750f, type: 3}
+    floor_a: {fileID: 21300000, guid: dfa6fffa919c8cf45927e7975ec28927, type: 3}
+    floor_b: {fileID: 21300000, guid: 262f44e5da155cb4f96d719620840592, type: 3}
     wall: {fileID: 21300000, guid: 7517a078d301e214e95eccd6dc26ad98, type: 3}
     door: {fileID: 21300000, guid: 6c749f1742a01004eab7bd62fb6ff11d, type: 3}
   - type: 4
@@ -446,8 +527,8 @@ MonoBehaviour:
     wall: {fileID: 21300000, guid: d93a6fbe5ec7af44abd99cc87b5ccae0, type: 3}
     door: {fileID: 21300000, guid: 1db183420c5e7ff4fbcf957449be4934, type: 3}
   - type: 5
-    floor_a: {fileID: 21300000, guid: 0a3b5cd955401884c947c53dba42c2b0, type: 3}
-    floor_b: {fileID: 21300000, guid: db030667a360ae94aa8d70cd8d34926b, type: 3}
+    floor_a: {fileID: 21300000, guid: 28d9045974b448548a53763a62814672, type: 3}
+    floor_b: {fileID: 21300000, guid: 88fd6cc6f3ae63c4cb8250334a3d1e51, type: 3}
     wall: {fileID: 21300000, guid: 159aea6dacdd2bf4ea7360c67338bf92, type: 3}
     door: {fileID: 21300000, guid: 1e832b927b3102045ba5643264eea6e4, type: 3}
   - type: 7
