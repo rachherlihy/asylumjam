@@ -6,9 +6,7 @@ using UnityEngine.UI;
 public class player_movement : MonoBehaviour
 {
 	public bool has_control = false;
-
-	public Text debug_text;
-
+	
 	public float speed = 5.0f;
 	float prev = 0.0f;
 
@@ -64,12 +62,7 @@ public class player_movement : MonoBehaviour
 	{
 		this.handle_keys();
 		this.handle_movement();
-
-		if ( this.debug_text != null )
-		{
-			this.debug_text.text = this.direction.ToString();
-		}
-
+		
 		if ( Input.GetKeyDown( KeyCode.LeftShift ) )
 		{
 			this.prev = this.speed;

@@ -105,7 +105,7 @@ public class room_manager : MonoBehaviour
 		}
 
 		state_manager.add_queue(
-			new generate_rooms( this, 5 ),
+			new generate_rooms( this, 50 ),
 			new change_start_room(),
 			new player_movement.set_default_anim( "spidle_front" ),
 			new player_movement.set_direction_position( direction.none ),
@@ -374,8 +374,8 @@ public class room_manager : MonoBehaviour
 		Vector3 start = new Vector3( 5.51f, -4.46f );
 
 		public override void update()
-		{			
-			var offset = this.height - ( this.height / room_manager.instance.max_distance * Random.Range( 0, room_manager.instance.max_distance ) );
+		{
+			var offset = this.height - ( this.height / ( float )room_manager.instance.max_distance * (float)room_manager.instance.current_room.distance );
 			var s = this.start;
 			s.y += offset;
 

@@ -13,7 +13,7 @@ public class player : MonoBehaviour
 	SpriteRenderer sr_shadow;
 
 	float off_tile_time = 0.0f;
-	float max_off_time = 2.0f;
+	float max_off_time = 1.5f;
 
 	float glass_height = 10.0f;
 	float shadow_alpha = 0.75f;
@@ -106,7 +106,7 @@ public class player : MonoBehaviour
 			this.set_glass_height();
 			this.set_shadow();
 
-			if ( this.off_tile_time == 2.0f )
+			if ( this.off_tile_time == this.max_off_time )
 			{
 				state_manager.add_queue(
 					new room_manager.take_control()
