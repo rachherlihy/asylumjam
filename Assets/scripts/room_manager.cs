@@ -15,16 +15,14 @@ public class room_manager : MonoBehaviour
 
 	room current_room;
 	room start_room;
-	room end_room;
-	
+
 	public Sprite sprite_door;
 	public Sprite floor_a;
 	public Sprite floor_b;
 
 	bool room_changing = false;
 
-	bool started = false;
-	SpriteRenderer[, ] tile_grid = new SpriteRenderer[10,7];
+	SpriteRenderer[, ] tile_grid = new SpriteRenderer[ 10, 7 ];
 	SpriteRenderer wall;
 
 	void Start()
@@ -76,7 +74,7 @@ public class room_manager : MonoBehaviour
 		{
 			var go = new GameObject( "wall" );
 			this.wall = go.AddComponent<SpriteRenderer>();
-        }
+		}
 
 		state_manager.add_queue(
 			new generate_rooms( this, 5 ),
@@ -84,8 +82,6 @@ public class room_manager : MonoBehaviour
 			fade.create_fade_in( 1.0f ),
 			new give_control()
 		);
-
-		this.started = true;
 	}
 
 	public void end()
@@ -99,8 +95,6 @@ public class room_manager : MonoBehaviour
 			new take_control(),
 			fade.create_fade_out( 1.0f )
 		);
-
-		this.started = false;
 	}
 
 	public static void join_rooms( room a, room b, direction a_connection )
@@ -119,6 +113,7 @@ public class room_manager : MonoBehaviour
 				fade.create_fade_out( 0.5f ),
 				new change_room( _room ),
 				new invert_position( _direction ),
+				new player.reset_off_tile(),
 				fade.create_fade_in( 0.5f ),
 				new give_control(),
 				new lock_room_change( this, false )
@@ -223,7 +218,7 @@ public class room_manager : MonoBehaviour
 		public invert_position( direction _direction )
 		{
 			this.horizontal = _direction == direction.left || _direction == direction.right;
-        }
+		}
 
 		public override void update()
 		{
@@ -276,6 +271,58 @@ public class room_manager : MonoBehaviour
 		{
 			this.to = room_manager.instance.start_room;
 			base.update();
+		}
+	}
+
+	public class set_player_position : state
+	{
+		Vector3 position;
+
+		public set_player_position( Vector3 _position )
+		{
+			this.position = _position;
+		}
+
+		public override void update()
+		{
+			player.instance.transform.position = this.position;
+			this.completed = true;
+		}
+	}
+
+	public class set_player_animation : state
+	{
+		string animation;
+
+		public set_player_animation( string animation )
+		{
+			this.animation = animation;
+		}
+
+		public override void update()
+		{
+			player.instance.pm.anim.Play( this.animation );
+			this.completed = true;
+		}
+	}
+
+	public class start_final_animation : state
+	{
+		public override void update()
+		{
+			this.completed = true;
+		}
+	}
+
+	public class remove_doors : state
+	{
+		public override void update()
+		{
+			foreach ( KeyValuePair<direction, door> p in room_manager.instance.doors )
+			{
+				p.Value.set_to( null );
+			}
+			this.completed = true;
 		}
 	}
 
@@ -335,7 +382,6 @@ public class room_manager : MonoBehaviour
 				}
 
 				rooms[ fx, fy ] = new room_end();
-				this.rm.end_room = rooms[ fx, fy ];
 
 				direction[, ] paths = new direction[ this.size, this.size ];
 
@@ -360,7 +406,8 @@ public class room_manager : MonoBehaviour
 					}
 				}
 
-				cx = fx; cy = fy;
+				cx = fx;
+				cy = fy;
 				for ( int dx = cx, dy = cy; cx != hsize || cy != hsize; cx = dx, cy = dy )
 				{
 					var o = offsets[ helper.inverse_direction( paths[ cx, cy ] ) ];
@@ -375,7 +422,8 @@ public class room_manager : MonoBehaviour
 					join_rooms( rooms[ dx, dy ], rooms[ cx, cy ], paths[ cx, cy ] );
 				}
 
-				cx = fx; cy = fy;
+				cx = fx;
+				cy = fy;
 				for ( int dx = cx, dy = cy; cx != hsize || cy != hsize; cx = dx, cy = dy )
 				{
 					var o = offsets[ helper.inverse_direction( paths[ cx, cy ] ) ];
@@ -416,7 +464,7 @@ public class room_manager : MonoBehaviour
 				this.completed = true;
 			}
 			catch ( System.IndexOutOfRangeException )
-            {
+			{
 				// ...
 			}
 		}

@@ -25,6 +25,7 @@ public class player_movement : MonoBehaviour
 
 	Dictionary<direction, Vector3> movement_offset = new Dictionary<direction, Vector3>()
 	{
+		{direction.none, new Vector3(0.0f, 0.0f) },
 		{direction.up, new Vector3(0.0f, 1.0f) },
 		{direction.down, new Vector3(0.0f, -1.0f) },
 		{direction.left, new Vector3(-1.0f, 0.0f) },
@@ -33,7 +34,7 @@ public class player_movement : MonoBehaviour
 
 	Dictionary<direction, string> animation_idle = new Dictionary<direction, string>()
 	{
-		{direction.none, "spidle_front" },
+		{direction.none, "spidle_back" },
 		{direction.up, "spidle_back" },
 		{direction.down, "spidle_front" },
 		{direction.left, "spidle_left" },
@@ -48,17 +49,19 @@ public class player_movement : MonoBehaviour
 		{direction.right, "spalk_right" },
 	};
 
-	Rigidbody2D r2d2;
-	Animator anim;
+	public Rigidbody2D r2d2;
+	public Animator anim;
 
 	// Use this for initialization
-	void Start () {
+	void Start()
+	{
 		this.r2d2 = this.GetComponent<Rigidbody2D>();
 		this.anim = this.GetComponent<Animator>();
 	}
-	
+
 	// Update is called once per frame
-	void Update () {
+	void Update()
+	{
 		this.handle_keys();
 		this.handle_movement();
 

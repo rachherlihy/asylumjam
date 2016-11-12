@@ -27,8 +27,13 @@ public class state_manager
 		{
 			state_queue.Enqueue( i );
 		}
-		
+
 		update_current();
+	}
+
+	static public void clear_queue()
+	{
+		state_queue.Clear();
 	}
 
 	static public void update()

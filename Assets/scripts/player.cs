@@ -45,6 +45,7 @@ public class player : MonoBehaviour
 			var sr = go_rim.AddComponent<SpriteRenderer>();
 			sr.sprite = sprite_manager.instance.glass_rim;
 			sr.sortingLayerName = "background";
+			sr.sortingOrder = 100;
 		}
 
 		this.set_glass_height();
@@ -56,9 +57,17 @@ public class player : MonoBehaviour
 			this.sr_shadow = go_shadow.AddComponent<SpriteRenderer>();
 			this.sr_shadow.sprite = sprite_manager.instance.glass_shadow;
 			this.sr_shadow.sortingLayerName = "background";
+			this.sr_shadow.sortingOrder = 99;
 		}
 
 		this.set_shadow();
+	}
+
+	public static void reset()
+	{
+		instance.off_tile_time = 0.0f;
+		instance.set_glass_height();
+		instance.set_shadow();
 	}
 
 	void set_glass_height()
@@ -101,6 +110,15 @@ public class player : MonoBehaviour
 					new room_manager.take_control()
 				);
 			}
+		}
+	}
+
+	public class reset_off_tile : state
+	{
+		public override void update()
+		{
+			player.reset();
+			this.completed = true;
 		}
 	}
 }

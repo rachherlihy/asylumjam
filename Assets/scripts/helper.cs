@@ -17,6 +17,7 @@ public class helper
 
 	static Dictionary<direction, direction> reverse_lookup = new Dictionary<direction, direction>()
 	{
+		{direction.none, direction.none },
 		{direction.up, direction.down },
 		{direction.down, direction.up },
 		{direction.left, direction.right },
@@ -31,8 +32,7 @@ public class helper
 
 	public static room create_random_room()
 	{
-		var v = System.Enum.GetValues( typeof( room_type ) );
-		switch ( random_enum_excluding(room_type.room, room_type.start, room_type.end) )
+		switch ( random_enum_excluding( room_type.room, room_type.start, room_type.end ) )
 		{
 			case room_type.basement:
 				return new room_basement();
@@ -60,13 +60,13 @@ public class helper
 		var v = System.Enum.GetValues( typeof( T ) ).Cast<T>().ToList();
 		var r = v.Except( excluding ).ToList();
 
-		return ( T ) r[Random.Range( 0, r.Count() )];
+		return ( T ) r[ Random.Range( 0, r.Count() ) ];
 	}
 
 	public static Vector3 tile_to_world( int x, int y )
 	{
-		float hwidth = (tile_x*tile_size) / 2.0f;
-		float hheight = (tile_y*tile_size) / 2.0f;
+		float hwidth = ( tile_x * tile_size ) / 2.0f;
+		float hheight = ( tile_y * tile_size ) / 2.0f;
 		float hsize = tile_size / 2.0f;
 
 		return new Vector3( x * tile_size - hwidth + hsize - offset_x, y * tile_size - hheight + hsize + offset_y );

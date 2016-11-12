@@ -34,10 +34,8 @@ public class sprite_manager : MonoBehaviour
 
 	public room_sprites get_sprites( room_type type )
 	{
-		Debug.Log( type );
 		int i = 0;
 		for ( ; i < this.sprites.Count && this.sprites[ i ].type != type; i++ );
-		Debug.Log( i );
 
 		return i == this.sprites.Count ? null : this.sprites[ i ];
 	}

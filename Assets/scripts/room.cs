@@ -19,10 +19,13 @@ public class room
 
 	public Sprite floor_sprite_a;
 	public Sprite floor_sprite_b;
-	public enum floor_state { a, b };
+	public enum floor_state
+	{
+		a, b
+	};
 
-	public floor_state[, ] floor = new floor_state [10,7];
-	bool generated = false;
+	public floor_state[, ] floor = new floor_state[ 10, 7 ];
+	protected bool generated = false;
 
 	public virtual void on_load()
 	{
@@ -73,6 +76,23 @@ public class room_start : room
 	{
 		this.type = room_type.start;
 	}
+
+	public override void on_load()
+	{
+		bool generated = this.generated;
+		base.on_load();
+
+		if ( !generated )
+		{
+			for ( int i = 0; i < 10; i++ )
+			{
+				for ( int j = 0; j < 7; j++ )
+				{
+					floor[ i, j ] = floor_state.a;
+				}
+			}
+		}
+	}
 }
 
 public class room_end : room
@@ -81,16 +101,26 @@ public class room_end : room
 	{
 		this.type = room_type.end;
 	}
-	
+
 	public override void on_enter()
 	{
+		state_manager.clear_queue();
 		state_manager.add_queue(
-			new room_manager.end_game()
+			new room_manager.take_control(),
+			new room_manager.remove_doors(),
+			new room_manager.set_player_position( new Vector3( -0.25f, -2.18f ) ),
+			new room_manager.set_player_animation( "spidle_back" ),
+			new player.reset_off_tile(),
+			fade.create_fade_in( 2.0f ),
+			new room_manager.start_final_animation()
 		);
 	}
 }
 
-public enum room_type  { room, start, end, kitchen, lounge, bathroom, basement, bedroom }
+public enum room_type
+{
+	room, start, end, kitchen, lounge, bathroom, basement, bedroom
+}
 
 public class room_kitchen : room
 {
