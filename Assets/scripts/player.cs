@@ -42,7 +42,7 @@ public class player : MonoBehaviour
 		}
 
 		this.go_rim = new GameObject( "rim" );
-		this.go_glass.transform.SetParent( this.transform );
+		this.go_rim.transform.SetParent( this.transform );
 		{
 			var sr = go_rim.AddComponent<SpriteRenderer>();
 			sr.sprite = sprite_manager.instance.glass_rim;
