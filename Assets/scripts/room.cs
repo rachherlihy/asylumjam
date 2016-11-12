@@ -5,6 +5,7 @@ public class room
 {
 	protected room_type type = room_type.room;
 
+	public int distance = 0; 
 
 	public Dictionary<direction, room> adjancent_rooms = new Dictionary<direction, room>()
 	{
@@ -106,6 +107,7 @@ public class room_end : room
 	{
 		state_manager.clear_queue();
 		state_manager.add_queue(
+			new room_manager.move_vacuum_spider(),
 			new room_manager.take_control(),
 			new room_manager.remove_doors(),
 			new room_manager.set_player_position( new Vector3( -0.25f, -2.18f ) ),

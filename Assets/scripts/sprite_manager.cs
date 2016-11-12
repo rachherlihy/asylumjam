@@ -18,7 +18,10 @@ public class sprite_manager : MonoBehaviour
 	public Sprite glass;
 	public Sprite glass_rim;
 	public Sprite glass_shadow;
-	
+
+	public Sprite vacuum;
+	public Sprite vacuum_spider;
+
 	public static sprite_manager instance;
 
 	// Use this for initialization

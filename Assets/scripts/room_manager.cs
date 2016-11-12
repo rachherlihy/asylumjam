@@ -22,8 +22,13 @@ public class room_manager : MonoBehaviour
 
 	public bool room_changing = false;
 
+	int max_distance = 0;
+	int cur_distance = 0;
+
 	SpriteRenderer[, ] tile_grid = new SpriteRenderer[ 10, 7 ];
 	SpriteRenderer wall;
+
+	GameObject go_vacuum;
 
 	void Start()
 	{
@@ -48,6 +53,9 @@ public class room_manager : MonoBehaviour
 
 	public void start()
 	{
+		this.max_distance = 0;
+		this.cur_distance = int.MaxValue;
+
 		this.doors[ direction.up ] = door.create( direction.up, new Vector3( -0.267f, 4.463f ), 0.0f );
 		this.doors[ direction.down ] = door.create( direction.down, new Vector3( -0.267f, -4.07f ), 180.0f );
 		this.doors[ direction.left ] = door.create( direction.left, new Vector3( -6.131f, 0.196f ), 90.0f );
@@ -70,10 +78,30 @@ public class room_manager : MonoBehaviour
 			}
 		}
 
-		// Create floor
+		// Create wall
 		{
 			var go = new GameObject( "wall" );
 			this.wall = go.AddComponent<SpriteRenderer>();
+		}
+
+		{
+			var go = new GameObject( "vacuum" );
+			go.transform.position = new Vector3( 5.51f, -3.16f );
+
+			var sr = go.AddComponent<SpriteRenderer>();
+			sr.sprite = sprite_manager.instance.vacuum;
+			sr.sortingLayerName = "ui";
+			sr.sortingOrder = 99;
+		}
+
+		{
+			this.go_vacuum = new GameObject( "vac_spider" );
+			this.go_vacuum.transform.position = new Vector3( 5.51f, -4.46f );
+
+			var sr = go_vacuum.AddComponent<SpriteRenderer>();
+			sr.sprite = sprite_manager.instance.vacuum_spider;
+			sr.sortingLayerName = "ui";
+			sr.sortingOrder = 100;
 		}
 
 		state_manager.add_queue(
@@ -116,6 +144,7 @@ public class room_manager : MonoBehaviour
 					new take_control(),
 					fade.create_fade_out( 0.5f ),
 					new change_room( this.current_room.adjancent_rooms[ _direction ] ),
+					new move_vacuum_spider(),
 					new player_movement.set_direction_position( helper.inverse_direction( _direction ) ),
 					new player.reset_off_tile(),
 					fade.create_fade_in( 0.5f ),
@@ -339,6 +368,23 @@ public class room_manager : MonoBehaviour
 		}
 	}
 
+	public class move_vacuum_spider : state
+	{
+		float height = 1.7f;
+		Vector3 start = new Vector3( 5.51f, -4.46f );
+
+		public override void update()
+		{			
+			var offset = this.height - ( this.height / room_manager.instance.max_distance * Random.Range( 0, room_manager.instance.max_distance ) );
+			var s = this.start;
+			s.y += offset;
+
+			room_manager.instance.go_vacuum.transform.position = s;
+
+			this.completed = true;
+		}
+	}
+
 	class generate_rooms : state
 	{
 		struct offset
@@ -373,6 +419,30 @@ public class room_manager : MonoBehaviour
 		bool on_grid( int x, int y )
 		{
 			return 0 <= x && x < this.size && 0 <= y && y < this.size;
+		}
+
+		int set_room_distance( room _r, int _d )
+		{
+			if ( _r.distance > _d || _r.distance == 0)
+			{
+				_r.distance = _d;
+				int max = _d;
+				foreach ( KeyValuePair<direction, room> p in _r.adjancent_rooms )
+				{
+					if ( p.Value != null )
+					{
+						int m = set_room_distance( p.Value, _d + 1 );
+						if ( m > max )
+						{
+							max = m;
+						}
+					}
+				}
+
+				return max;
+			}
+
+			return _d;
 		}
 
 		public override void update()
@@ -475,6 +545,8 @@ public class room_manager : MonoBehaviour
 						}
 					}
 				}
+
+				room_manager.instance.max_distance = this.set_room_distance( rooms[ fx, fy ], 1 );
 
 				this.completed = true;
 			}
