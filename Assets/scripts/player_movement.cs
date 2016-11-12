@@ -141,6 +141,11 @@ public class player_movement : MonoBehaviour
 			this.r2d2.MovePosition( pos );
 
 			this.anim.Play( this.animation_walk[ this.direction ] );
+
+			if ( this.direction == player.instance.door_direction )
+			{
+				room_manager.instance.update_room( this.direction );
+			}
 		}
 		else if ( !this.has_control )
 		{
@@ -175,5 +180,30 @@ public class player_movement : MonoBehaviour
 			player.instance.pm.animation_idle[ direction.none ] = this.animation;
 			this.completed = true;
         }
+	}
+
+	public class set_direction_position : state
+	{
+		static Dictionary<direction, Vector3> positions = new Dictionary<direction, Vector3>()
+		{
+			{direction.none, new Vector3( -0.26f, 0.21f ) },
+            {direction.up, new Vector3( -0.26f, 3.41f ) },
+            {direction.down, new Vector3( -0.26f, -2.98f ) },
+            {direction.left, new Vector3( -5.07f, 0.21f ) },
+			{direction.right, new Vector3( 4.54f, 0.21f ) }
+		};
+
+		direction dir;
+
+		public set_direction_position( direction _dir )
+		{
+			this.dir = _dir;
+		}
+
+		public override void update()
+		{
+			player.instance.transform.position = positions[ this.dir ];
+			this.completed = true;
+		}
 	}
 }

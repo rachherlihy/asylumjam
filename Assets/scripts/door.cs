@@ -24,7 +24,7 @@ public class door : MonoBehaviour {
 		d.direction = _direction;
 
 		var bc = go.AddComponent<BoxCollider2D>();
-		bc.size = new Vector2( 0.5f, 1.0f );
+		bc.size = new Vector2( 0.5f, 1.1f );
 		bc.isTrigger = true;
 
 		var sr = go.AddComponent<SpriteRenderer>();
@@ -39,9 +39,17 @@ public class door : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D _collider)
 	{
-		if ( _collider.gameObject.tag == "Player" && this.to != null )
+		if ( _collider.gameObject.tag == "Player" )
 		{
-			room_manager.instance.update_room( this.to, this.direction );
+			player.instance.door_direction = this.direction;
+		}
+	}
+
+	void OnTriggerExit2D( Collider2D _collider )
+	{
+		if ( _collider.gameObject.tag == "Player" && !room_manager.instance.room_changing)
+		{
+			player.instance.door_direction = direction.none;
 		}
 	}
 

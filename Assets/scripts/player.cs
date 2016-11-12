@@ -20,6 +20,8 @@ public class player : MonoBehaviour
 
 	float scale_up = 0.25f;
 
+	public direction door_direction;
+
 	void Start()
 	{
 		if ( instance != null )

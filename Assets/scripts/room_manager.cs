@@ -20,7 +20,7 @@ public class room_manager : MonoBehaviour
 	public Sprite floor_a;
 	public Sprite floor_b;
 
-	bool room_changing = false;
+	public bool room_changing = false;
 
 	SpriteRenderer[, ] tile_grid = new SpriteRenderer[ 10, 7 ];
 	SpriteRenderer wall;
@@ -80,6 +80,7 @@ public class room_manager : MonoBehaviour
 			new generate_rooms( this, 5 ),
 			new change_start_room(),
 			new player_movement.set_default_anim( "spidle_front" ),
+			new player_movement.set_direction_position( direction.none ),
 			fade.create_fade_in( 1.0f ),
 			new give_control()
 		);
@@ -104,21 +105,24 @@ public class room_manager : MonoBehaviour
 		b.adjancent_rooms[ helper.inverse_direction( a_connection ) ] = a;
 	}
 
-	public void update_room( room _room, direction _direction = direction.none )
+	public void update_room(direction _direction = direction.none )
 	{
 		if ( !this.room_changing )
 		{
-			state_manager.add_queue(
-				new lock_room_change( this, true ),
-				new take_control(),
-				fade.create_fade_out( 0.5f ),
-				new change_room( _room ),
-				new invert_position( _direction ),
-				new player.reset_off_tile(),
-				fade.create_fade_in( 0.5f ),
-				new give_control(),
-				new lock_room_change( this, false )
-			);
+			if ( this.current_room.adjancent_rooms[ _direction ] != null )
+			{
+				state_manager.add_queue(
+					new lock_room_change( this, true ),
+					new take_control(),
+					fade.create_fade_out( 0.5f ),
+					new change_room( this.current_room.adjancent_rooms[ _direction ] ),
+					new player_movement.set_direction_position( helper.inverse_direction( _direction ) ),
+					new player.reset_off_tile(),
+					fade.create_fade_in( 0.5f ),
+					new give_control(),
+					new lock_room_change( this, false )
+				);
+			}			
 		}
 	}
 
