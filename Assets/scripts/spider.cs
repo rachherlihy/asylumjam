@@ -40,10 +40,64 @@ public class spider : MonoBehaviour
 
 			if ( this.current >= this.time )
 			{
-				this.completed = false;
+				this.completed = true;
 			}
 		}
+	}
 
 
+	public class bounce_a : state
+	{
+		float time;
+		float current;
+
+		float height;
+		Vector3 end = new Vector3( -0.26f, 2.60f );
+
+		public bounce_a( float height, float time )
+		{
+			this.height = height;
+			this.time = time;
+		}
+
+		public override void update()
+		{
+			this.current = Mathf.Min( this.time, this.current + Time.deltaTime );
+
+			var height = ( this.height / this.time * this.current );
+			spider.instance.transform.position = this.end + new Vector3( 0.0f, height );
+
+			if ( this.current >= this.time )
+			{
+				this.completed = true;
+			}
+		}
+	}
+	public class bounce_b : state
+	{
+		float time;
+		float current;
+
+		float height;
+		Vector3 end = new Vector3( -0.26f, 2.60f );
+
+		public bounce_b( float height, float time )
+		{
+			this.height = height;
+			this.time = time;
+		}
+
+		public override void update()
+		{
+			this.current = Mathf.Min( this.time, this.current + Time.deltaTime );
+
+			var height = this.height - ( this.height / this.time * this.current );
+			spider.instance.transform.position = this.end + new Vector3( 0.0f, height );
+
+			if ( this.current >= this.time )
+			{
+				this.completed = true;
+			}
+		}
 	}
 }

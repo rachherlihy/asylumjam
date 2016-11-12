@@ -316,7 +316,11 @@ public class room_manager : MonoBehaviour
 		public override void update()
 		{
 			state_manager.add_queue(
-				new spider.drop_in( 4.0f )
+				new spider.drop_in( 1.5f ),
+				new spider.bounce_a( 0.25f, 0.2f ),
+				new spider.bounce_b( 0.25f, 0.3f ),
+				new pause( 0.5f ),
+				new camera.screen_shake( 1.0f, 0.5f )
 			);
 
 			this.completed = true;
