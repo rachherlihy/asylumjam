@@ -375,11 +375,13 @@ public class room_manager : MonoBehaviour
 				this.rm.start_room = rooms[ hsize, hsize ];
 
 				// Calculate the position of the end room
-				int fx = hsize, fy = hsize;
-				while ( fx == hsize && fy == hsize )
+				int fx = hsize, fy = hsize, distance = 0;
+				while ( fx == hsize && fy == hsize || distance < 2)
 				{
 					fx = Random.Range( 0, this.size );
 					fy = Random.Range( 0, this.size );
+
+					distance = Mathf.RoundToInt( Mathf.Sqrt( (float)Mathf.Pow( fx - hsize, 2 ) + (float)Mathf.Pow( fy - hsize, 2 ) ) );
 				}
 
 				rooms[ fx, fy ] = new room_end();
