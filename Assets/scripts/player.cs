@@ -24,6 +24,8 @@ public class player : MonoBehaviour
 
 	SpriteRenderer sr;
 
+	public bool COMPLETELY_FUCKED = false;
+
 	void Start()
 	{
 		if ( instance != null )
@@ -94,7 +96,8 @@ public class player : MonoBehaviour
 
 	void Update()
 	{
-		if ( this.pm.has_control )
+		Debug.Log( this.COMPLETELY_FUCKED );
+		if ( this.pm.has_control && !this.COMPLETELY_FUCKED )
 		{
 			var p = helper.world_to_tile( this.transform.position );
 			if ( room_manager.instance.on_tile( ( int ) p.x, ( int ) p.y ) )
@@ -129,7 +132,15 @@ public class player : MonoBehaviour
 
 		public override void update()
 		{
-			player.instance.sr.enabled = this.show;
+			if ( player.instance.COMPLETELY_FUCKED )
+			{
+				player.instance.sr.enabled = false;
+				player_dead.instance.sr.enabled = true;
+			}
+			else
+			{
+				player.instance.sr.enabled = this.show;
+			}
 			this.completed = true;
 		}
 	}

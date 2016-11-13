@@ -28,6 +28,7 @@ public class game_manager : MonoBehaviour
 			//fade.create_fade_out( 1.5f ),
 			//new menu_manager.show_splash( false ),
 			//new goto_menu()
+			//new io_manager.input_data(),
 			new room_manager.start_game()
         );
 	}

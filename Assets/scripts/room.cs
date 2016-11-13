@@ -3,11 +3,6 @@ using System.Collections.Generic;
 
 public class room
 {
-	~room()
-    {
-		Debug.Log( "Unloaded" );
-	}
-
 	protected room_type type = room_type.room;
 
 	public int distance = 0; 

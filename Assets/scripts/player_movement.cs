@@ -60,17 +60,20 @@ public class player_movement : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		this.handle_keys();
-		this.handle_movement();
-		
-		if ( Input.GetKeyDown( KeyCode.LeftShift ) )
+		if ( !player.instance.COMPLETELY_FUCKED )
 		{
-			this.prev = this.speed;
-			this.speed = 0.25f;
-		}
-		else if ( Input.GetKeyUp( KeyCode.LeftShift ) )
-		{
-			this.speed = this.prev;
+			this.handle_keys();
+			this.handle_movement();
+
+			if ( Input.GetKeyDown( KeyCode.LeftShift ) )
+			{
+				this.prev = this.speed;
+				this.speed = 0.25f;
+			}
+			else if ( Input.GetKeyUp( KeyCode.LeftShift ) )
+			{
+				this.speed = this.prev;
+			}
 		}
 	}
 

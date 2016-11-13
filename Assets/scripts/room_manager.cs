@@ -119,6 +119,7 @@ public class room_manager : MonoBehaviour
 		}
 
 		state_manager.add_queue(
+			new room_manager.initialise_player(),
 			new generate_rooms( this, 5 ),
 			new change_start_room(),
 			new move_vacuum_spider(),
@@ -127,7 +128,7 @@ public class room_manager : MonoBehaviour
 			new player_movement.set_direction_position( direction.none ),
 			fade.create_fade_in( 1.0f ),
 			new spider.show_spider( false ),
-			new give_control()
+            new give_control()
 		);
 	}
 
@@ -404,6 +405,19 @@ public class room_manager : MonoBehaviour
 		}
 	}
 
+	class initialise_player : state
+	{
+		public override void update()
+		{
+			if ( game_manager.instance.has_won )
+			{
+				player.instance.COMPLETELY_FUCKED = true;
+			}
+
+			this.completed = true;
+		}
+	}
+
 	class generate_rooms : state
 	{
 		struct offset
@@ -463,7 +477,7 @@ public class room_manager : MonoBehaviour
 
 			return _d;
 		}
-
+		
 		public override void update()
 		{
 			try
