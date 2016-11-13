@@ -368,7 +368,10 @@ public class room_manager : MonoBehaviour
 				new spider.bounce_b( 0.25f, 0.3f ),
 				new pause( 0.5f ),
 				new camera.screen_shake( 1.0f, 0.5f ),
-				// TODO: particles and stuff
+				new pause( 1.0f ),
+				new particle_manager.create_particle( particle_manager.instance.heart_a, new Vector3( 0.0f, -1.99f), new Vector3( 0.0f, 1.0f), 2.0f, 0.1f, 0.01f ),
+				new particle_manager.create_particle( particle_manager.instance.heart_b, new Vector3( -0.5f, -1.99f ), new Vector3( 0.0f, 1.0f ), 2.0f, 0.1f, 0.01f ),
+				new pause( 2.0f ),
 				new end_game()
 			);
 

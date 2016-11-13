@@ -96,7 +96,6 @@ public class player : MonoBehaviour
 
 	void Update()
 	{
-		Debug.Log( this.COMPLETELY_FUCKED );
 		if ( this.pm.has_control && !this.COMPLETELY_FUCKED )
 		{
 			var p = helper.world_to_tile( this.transform.position );
