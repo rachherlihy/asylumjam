@@ -107,6 +107,7 @@ public class room_end : room
 	{
 		state_manager.clear_queue();
 		state_manager.add_queue(
+			new audio_mananger.play_boss(),
 			new room_manager.move_vacuum_spider(),
 			new room_manager.take_control(),
 			new room_manager.remove_doors(),

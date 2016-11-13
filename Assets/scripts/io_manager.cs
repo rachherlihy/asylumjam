@@ -25,21 +25,29 @@ public class io_manager
 {
 	static public void output( save_data _output )
 	{
-		using ( StreamWriter sr = new StreamWriter( Application.persistentDataPath + "this_is_racheals_fault.json" ) )
+		try
 		{
-			sr.Write( JsonUtility.ToJson( _output ) );
+			using ( StreamWriter sr = new StreamWriter( Application.persistentDataPath + "/this_is_racheals_fault.json" ) )
+			{
+				sr.Write( JsonUtility.ToJson( _output ) );
+			}
 		}
+		catch {}
 	}
 
 	static public save_data input()
 	{
 		save_data data = new save_data();
 
-		using ( StreamReader sr = new StreamReader( Application.persistentDataPath + "this_is_racheals_fault.json" ) )
+		try
 		{
-			var i = sr.ReadToEnd();
-			JsonUtility.FromJsonOverwrite( i, data );
+			using ( StreamReader sr = new StreamReader( Application.persistentDataPath + "/this_is_racheals_fault.json" ) )
+			{
+				var i = sr.ReadToEnd();
+				JsonUtility.FromJsonOverwrite( i, data );
+			}
 		}
+		catch {}
 
 		return data;
 	}

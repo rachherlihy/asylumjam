@@ -23,7 +23,6 @@ public class room_manager : MonoBehaviour
 	public bool room_changing = false;
 
 	int max_distance = 0;
-	int cur_distance = 0;
 
 	SpriteRenderer[, ] tile_grid = new SpriteRenderer[ 10, 7 ];
 	SpriteRenderer wall;
@@ -54,7 +53,6 @@ public class room_manager : MonoBehaviour
 	public void start()
 	{
 		this.max_distance = 0;
-		this.cur_distance = int.MaxValue;
 
 		if ( this.doors[ direction.up ] == null )
 		{
@@ -123,7 +121,8 @@ public class room_manager : MonoBehaviour
 
 		state_manager.add_queue(
 			new room_manager.initialise_player(),
-			new generate_rooms( this, 5 ),
+			new audio_mananger.play_level(),
+			new generate_rooms( this, 25 ),
 			new change_start_room(),
 			new move_vacuum_spider(),
 			new player.show_player( true ),
@@ -145,8 +144,10 @@ public class room_manager : MonoBehaviour
 			fade.create_fade_out( 1.0f ),
             new player.show_player( false ),
 			new spider.show_spider( false ),
-			new game_manager.goto_menu(),
-			new player.reset_off_tile()
+			new audio_mananger.stop_all(),
+			new player.reset_off_tile(),
+			new io_manager.output_data(),
+			new close_game()
         );
 	}
 
@@ -371,6 +372,7 @@ public class room_manager : MonoBehaviour
 				new spider.bounce_a( 0.25f, 0.2f ),
 				new spider.bounce_b( 0.25f, 0.3f ),
 				new pause( 0.5f ),
+				new audio_mananger.play_one_shot( audio_mananger.instance.spider_scream ),
 				new camera.screen_shake( 1.0f, 0.5f ),
 				new pause( 1.0f ),
 				new particle_manager.create_particle( particle_manager.instance.heart_a, new Vector3( 0.0f, -1.99f), new Vector3( 0.0f, 1.0f), 2.0f, 0.1f, 0.01f ),

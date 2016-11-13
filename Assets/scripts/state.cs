@@ -59,3 +59,12 @@ public class tween : state
 		}
 	}
 }
+
+public class close_game : state
+{
+	public override void update()
+	{
+		Application.Quit();
+		this.completed = true;
+	}
+}

@@ -8,7 +8,6 @@ public class player_movement : MonoBehaviour
 	public bool has_control = false;
 	
 	public float speed = 5.0f;
-	float prev = 0.0f;
 
 	direction direction = direction.none;
 	List<direction> input_queue = new List<direction>();
@@ -64,16 +63,6 @@ public class player_movement : MonoBehaviour
 		{
 			this.handle_keys();
 			this.handle_movement();
-
-			if ( Input.GetKeyDown( KeyCode.LeftShift ) )
-			{
-				this.prev = this.speed;
-				this.speed = 0.25f;
-			}
-			else if ( Input.GetKeyUp( KeyCode.LeftShift ) )
-			{
-				this.speed = this.prev;
-			}
 		}
 	}
 
