@@ -5,6 +5,8 @@ public class spider : MonoBehaviour
 {
 	static spider instance;
 
+	SpriteRenderer sr;
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -15,6 +17,7 @@ public class spider : MonoBehaviour
 		}
 
 		instance = this;
+		this.sr = this.GetComponent<SpriteRenderer>();
 	}
 
 	public class drop_in : state
@@ -98,6 +101,23 @@ public class spider : MonoBehaviour
 			{
 				this.completed = true;
 			}
+		}
+	}
+
+	public class show_spider : state
+	{
+		bool show;
+
+		public show_spider( bool _show )
+		{
+			this.show = _show;
+		}
+
+		public override void update()
+		{
+			spider.instance.sr.enabled = this.show;
+
+			this.completed = true;
 		}
 	}
 }

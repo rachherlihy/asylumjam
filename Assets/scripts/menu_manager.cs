@@ -21,16 +21,22 @@ public class menu_manager : MonoBehaviour
 
 		{
 			var go = new GameObject( "splash" );
+			go.transform.position = new Vector3( -0.25f, 0.18f );
 			this.sr_splash = go.AddComponent<SpriteRenderer>();
 			this.sr_splash.sprite = sprite_manager.instance.splash;
 			this.sr_splash.sortingLayerName = "ui";
+			this.sr_splash.sortingOrder = 999;
+			this.sr_splash.enabled = false;
 		}
 
 		{
 			var go = new GameObject( "menu" );
+			go.transform.position = new Vector3( -0.25f, 0.18f );
 			this.sr_menu = go.AddComponent<SpriteRenderer>();
 			this.sr_menu.sprite = sprite_manager.instance.menu;
 			this.sr_menu.sortingLayerName = "ui";
+			this.sr_menu.sortingOrder = 1000;
+			this.sr_menu.enabled = false;
 		}
 	}
 

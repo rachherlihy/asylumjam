@@ -22,6 +22,8 @@ public class player : MonoBehaviour
 
 	public direction door_direction;
 
+	SpriteRenderer sr;
+
 	void Start()
 	{
 		if ( instance != null )
@@ -32,6 +34,7 @@ public class player : MonoBehaviour
 
 		instance = this;
 		this.pm = this.GetComponent<player_movement>();
+		this.sr = this.GetComponent<SpriteRenderer>();
 
 		this.go_glass = new GameObject( "glass" );
 		this.go_glass.transform.SetParent( this.transform );
@@ -112,6 +115,22 @@ public class player : MonoBehaviour
 					new room_manager.take_control()
 				);
 			}
+		}
+	}
+
+	public class show_player : state
+	{
+		bool show;
+
+		public show_player( bool _show )
+		{
+			this.show = _show;
+		}
+
+		public override void update()
+		{
+			player.instance.sr.enabled = this.show;
+			this.completed = true;
 		}
 	}
 

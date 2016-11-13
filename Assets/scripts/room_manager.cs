@@ -56,12 +56,24 @@ public class room_manager : MonoBehaviour
 		this.max_distance = 0;
 		this.cur_distance = int.MaxValue;
 
-		this.doors[ direction.up ] = door.create( direction.up, new Vector3( -0.267f, 4.463f ), 0.0f );
-		this.doors[ direction.down ] = door.create( direction.down, new Vector3( -0.267f, -4.07f ), 180.0f );
-		this.doors[ direction.left ] = door.create( direction.left, new Vector3( -6.131f, 0.196f ), 90.0f );
-		this.doors[ direction.right ] = door.create( direction.right, new Vector3( 5.6f, 0.196f ), 270.0f );
+		if ( this.doors[ direction.up ] == null )
+		{
+			this.doors[ direction.up ] = door.create( direction.up, new Vector3( -0.267f, 4.463f ), 0.0f );
+		}
+		if ( this.doors[ direction.down ] == null )
+		{
+			this.doors[ direction.down ] = door.create( direction.down, new Vector3( -0.267f, -4.07f ), 180.0f );
+		}
+		if ( this.doors[ direction.left ] == null )
+		{
+			this.doors[ direction.left ] = door.create( direction.left, new Vector3( -6.131f, 0.196f ), 90.0f );
+		}
+		if ( this.doors[ direction.right ] == null )
+		{
+			this.doors[ direction.right ] = door.create( direction.right, new Vector3( 5.6f, 0.196f ), 270.0f );
+		}
 
-		// Create titles
+		if ( this.wall == null )
 		{
 			var go = new GameObject( "Tiles" );
 
@@ -77,13 +89,14 @@ public class room_manager : MonoBehaviour
 				}
 			}
 		}
-
-		// Create wall
+		
+		if ( this.wall == null )
 		{
 			var go = new GameObject( "wall" );
 			this.wall = go.AddComponent<SpriteRenderer>();
 		}
 
+		if ( this.go_vacuum == null )
 		{
 			var go = new GameObject( "vacuum" );
 			go.transform.position = new Vector3( 5.51f, -3.16f );
@@ -94,6 +107,7 @@ public class room_manager : MonoBehaviour
 			sr.sortingOrder = 99;
 		}
 
+		if ( this.go_vacuum == null )
 		{
 			this.go_vacuum = new GameObject( "vac_spider" );
 			this.go_vacuum.transform.position = new Vector3( 5.51f, -4.46f );
@@ -105,26 +119,30 @@ public class room_manager : MonoBehaviour
 		}
 
 		state_manager.add_queue(
-			new generate_rooms( this, 50 ),
+			new generate_rooms( this, 5 ),
 			new change_start_room(),
+			new move_vacuum_spider(),
+			new player.show_player( true ),
 			new player_movement.set_default_anim( "spidle_front" ),
 			new player_movement.set_direction_position( direction.none ),
 			fade.create_fade_in( 1.0f ),
+			new spider.show_spider( false ),
 			new give_control()
 		);
 	}
 
 	public void end()
 	{
-		this.doors[ direction.up ] = null;
-		this.doors[ direction.down ] = null;
-		this.doors[ direction.left ] = null;
-		this.doors[ direction.right ] = null;
+		this.current_room = null;
+		this.start_room = null;
 
 		state_manager.add_queue(
 			new take_control(),
-			fade.create_fade_out( 1.0f )
-		);
+			fade.create_fade_out( 1.0f ),
+            new player.show_player( false ),
+			new spider.show_spider( false ),
+			new game_manager.goto_menu()
+        );
 	}
 
 	public static void join_rooms( room a, room b, direction a_connection )
@@ -140,7 +158,6 @@ public class room_manager : MonoBehaviour
 			if ( this.current_room.adjancent_rooms[ _direction ] != null )
 			{
 				state_manager.add_queue(
-					new lock_room_change( this, true ),
 					new take_control(),
 					fade.create_fade_out( 0.5f ),
 					new change_room( this.current_room.adjancent_rooms[ _direction ] ),
@@ -148,8 +165,7 @@ public class room_manager : MonoBehaviour
 					new player_movement.set_direction_position( helper.inverse_direction( _direction ) ),
 					new player.reset_off_tile(),
 					fade.create_fade_in( 0.5f ),
-					new give_control(),
-					new lock_room_change( this, false )
+					new give_control()
 				);
 			}			
 		}
@@ -345,11 +361,14 @@ public class room_manager : MonoBehaviour
 		public override void update()
 		{
 			state_manager.add_queue(
+				new spider.show_spider( true ),
 				new spider.drop_in( 1.5f ),
 				new spider.bounce_a( 0.25f, 0.2f ),
 				new spider.bounce_b( 0.25f, 0.3f ),
 				new pause( 0.5f ),
-				new camera.screen_shake( 1.0f, 0.5f )
+				new camera.screen_shake( 1.0f, 0.5f ),
+				// TODO: particles and stuff
+				new end_game()
 			);
 
 			this.completed = true;

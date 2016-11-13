@@ -1,22 +1,38 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class game_manager : MonoBehaviour {
+public class game_manager : MonoBehaviour
+{
+	public static game_manager instance;
+
+	public bool has_won;
+	public float time_remaining;
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
+		if ( instance != null )
+		{
+			DestroyObject( this.gameObject );
+			return;
+		}
+
+		instance = this;
+
 		state_manager.add_queue(
-			new menu_manager.show_splash( true ),
-			new pause( 0.5f ),
-			fade.create_fade_in( 1.5f ),
-			new pause( 2.0f ),
-			fade.create_fade_out( 1.5f ),
-			new menu_manager.show_splash( false ),
-			new goto_menu()
+			//new player.show_player( false ),
+			//new menu_manager.show_splash( true ),
+			//new pause( 0.5f ),
+			//fade.create_fade_in( 1.5f ),
+			//new pause( 2.0f ),
+			//fade.create_fade_out( 1.5f ),
+			//new menu_manager.show_splash( false ),
+			//new goto_menu()
+			new room_manager.start_game()
         );
 	}
 
-	class goto_menu : state
+	public class goto_menu : state
 	{
 		public override void update()
 		{
@@ -29,6 +45,15 @@ public class game_manager : MonoBehaviour {
 				new room_manager.start_game()
 			);
 
+			this.completed = true;
+		}
+	}
+
+	public class set_has_won : state
+	{
+		public override void update()
+		{
+			game_manager.instance.has_won = true;
 			this.completed = true;
 		}
 	}

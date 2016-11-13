@@ -470,6 +470,7 @@ GameObject:
   - 4: {fileID: 1188255562}
   - 114: {fileID: 1188255561}
   - 114: {fileID: 1188255563}
+  - 114: {fileID: 1188255564}
   m_Layer: 0
   m_Name: game_manager
   m_TagString: Untagged
@@ -558,6 +559,19 @@ MonoBehaviour:
   glass_shadow: {fileID: 21300000, guid: bbf10b1fd706cf848a3b1c327755a25a, type: 3}
   vacuum: {fileID: 21300000, guid: b6b3acbef20ca9c4d8f315f2a4dcb777, type: 3}
   vacuum_spider: {fileID: 21300000, guid: b559083484657d24e8bea0abc6c0f0e9, type: 3}
+  splash: {fileID: 21300000, guid: a9633ba1505e15b4baebe55f895b9c21, type: 3}
+  menu: {fileID: 21300000, guid: b6b3acbef20ca9c4d8f315f2a4dcb777, type: 3}
+--- !u!114 &1188255564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1188255560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21e7f9fe1c29ba94988c2a8e4c57ca23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1583836438
 GameObject:
   m_ObjectHideFlags: 0
@@ -678,7 +692,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   has_control: 0
-  debug_text: {fileID: 0}
   speed: 0.03
   r2d2: {fileID: 0}
   anim: {fileID: 0}

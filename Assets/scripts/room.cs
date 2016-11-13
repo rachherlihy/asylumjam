@@ -3,6 +3,11 @@ using System.Collections.Generic;
 
 public class room
 {
+	~room()
+    {
+		Debug.Log( "Unloaded" );
+	}
+
 	protected room_type type = room_type.room;
 
 	public int distance = 0; 
@@ -114,7 +119,9 @@ public class room_end : room
 			new player_movement.set_default_anim("spidle_back"),
 			new player.reset_off_tile(),
 			fade.create_fade_in( 2.0f ),
-			new room_manager.start_final_animation()
+			new game_manager.set_has_won(),
+			new io_manager.output_data(),
+            new room_manager.start_final_animation()
 		);
 	}
 }
