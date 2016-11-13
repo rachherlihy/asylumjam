@@ -145,7 +145,8 @@ public class room_manager : MonoBehaviour
 			fade.create_fade_out( 1.0f ),
             new player.show_player( false ),
 			new spider.show_spider( false ),
-			new game_manager.goto_menu()
+			new game_manager.goto_menu(),
+			new player.reset_off_tile()
         );
 	}
 
