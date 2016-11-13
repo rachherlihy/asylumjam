@@ -7,6 +7,7 @@ public class particle_manager : MonoBehaviour {
 
 	public GameObject heart_a;
 	public GameObject heart_b;
+	public GameObject baby_spider;
 
 	// Use this for initialization
 	void Start ()

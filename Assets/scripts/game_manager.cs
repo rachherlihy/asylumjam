@@ -55,6 +55,7 @@ public class game_manager : MonoBehaviour
 		public override void update()
 		{
 			game_manager.instance.has_won = true;
+			player.instance.COMPLETELY_FUCKED = true;
 			this.completed = true;
 		}
 	}

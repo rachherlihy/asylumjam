@@ -94,6 +94,9 @@ public class room_manager : MonoBehaviour
 		{
 			var go = new GameObject( "wall" );
 			this.wall = go.AddComponent<SpriteRenderer>();
+			this.wall.sortingLayerName = "background";
+			this.wall.sortingOrder = 2;
+				
 		}
 
 		if ( this.go_vacuum == null )
@@ -372,7 +375,21 @@ public class room_manager : MonoBehaviour
 				new particle_manager.create_particle( particle_manager.instance.heart_a, new Vector3( 0.0f, -1.99f), new Vector3( 0.0f, 1.0f), 2.0f, 0.1f, 0.01f ),
 				new particle_manager.create_particle( particle_manager.instance.heart_b, new Vector3( -0.5f, -1.99f ), new Vector3( 0.0f, 1.0f ), 2.0f, 0.1f, 0.01f ),
 				new pause( 2.0f ),
-				new end_game()
+				new tween( spider.instance.gameObject, new Vector3( -0.26f, 2.60f ), new Vector3( -0.25f, 1.32f ), 0.2f ),
+				new player.show_player( false ),
+				new particle_manager.create_particle( particle_manager.instance.baby_spider, new Vector3( -0.25f, -2.18f ), new Vector3( Random.Range( -1.0f, 1.0f ), Random.Range( -1.0f, 1.0f ) ), 2.0f, 0.1f, Random.Range( 0.04f, 0.08f ) ),
+				new particle_manager.create_particle( particle_manager.instance.baby_spider, new Vector3( -0.25f, -2.18f ), new Vector3( Random.Range( -1.0f, 1.0f ), Random.Range( -1.0f, 1.0f ) ), 2.0f, 0.1f, Random.Range( 0.04f, 0.08f ) ),
+				new particle_manager.create_particle( particle_manager.instance.baby_spider, new Vector3( -0.25f, -2.18f ), new Vector3( Random.Range( -1.0f, 1.0f ), Random.Range( -1.0f, 1.0f ) ), 2.0f, 0.1f, Random.Range( 0.04f, 0.08f ) ),
+				new particle_manager.create_particle( particle_manager.instance.baby_spider, new Vector3( -0.25f, -2.18f ), new Vector3( Random.Range( -1.0f, 1.0f ), Random.Range( -1.0f, 1.0f ) ), 2.0f, 0.1f, Random.Range( 0.04f, 0.08f ) ),
+				new particle_manager.create_particle( particle_manager.instance.baby_spider, new Vector3( -0.25f, -2.18f ), new Vector3( Random.Range( -1.0f, 1.0f ), Random.Range( -1.0f, 1.0f ) ), 2.0f, 0.1f, Random.Range( 0.04f, 0.08f ) ),
+				new particle_manager.create_particle( particle_manager.instance.baby_spider, new Vector3( -0.25f, -2.18f ), new Vector3( Random.Range( -1.0f, 1.0f ), Random.Range( -1.0f, 1.0f ) ), 2.0f, 0.1f, Random.Range( 0.04f, 0.08f ) ),
+				new particle_manager.create_particle( particle_manager.instance.baby_spider, new Vector3( -0.25f, -2.18f ), new Vector3( Random.Range( -1.0f, 1.0f ), Random.Range( -1.0f, 1.0f ) ), 2.0f, 0.1f, Random.Range( 0.04f, 0.08f ) ),
+				new particle_manager.create_particle( particle_manager.instance.baby_spider, new Vector3( -0.25f, -2.18f ), new Vector3( Random.Range( -1.0f, 1.0f ), Random.Range( -1.0f, 1.0f ) ), 2.0f, 0.1f, Random.Range( 0.04f, 0.08f ) ),
+				new particle_manager.create_particle( particle_manager.instance.baby_spider, new Vector3( -0.25f, -2.18f ), new Vector3( Random.Range( -1.0f, 1.0f ), Random.Range( -1.0f, 1.0f ) ), 2.0f, 0.1f, Random.Range( 0.04f, 0.08f ) ),
+				new particle_manager.create_particle( particle_manager.instance.baby_spider, new Vector3( -0.25f, -2.18f ), new Vector3( Random.Range( -1.0f, 1.0f ), Random.Range( -1.0f, 1.0f ) ), 2.0f, 0.1f, Random.Range( 0.04f, 0.08f ) ),
+				new tween( spider.instance.gameObject, new Vector3( -0.25f, 1.32f ), new Vector3( -0.26f, 2.60f ), 0.2f ),
+				new pause( 2.0f ),
+                new end_game()
 			);
 
 			this.completed = true;

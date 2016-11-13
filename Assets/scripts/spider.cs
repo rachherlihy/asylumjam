@@ -3,7 +3,7 @@ using System.Collections;
 
 public class spider : MonoBehaviour
 {
-	static spider instance;
+	public static spider instance;
 
 	SpriteRenderer sr;
 

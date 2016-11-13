@@ -29,6 +29,7 @@ public class door : MonoBehaviour {
 
 		var sr = go.AddComponent<SpriteRenderer>();
 		sr.sortingLayerName = "background";
+		sr.sortingOrder = 3;
 		d.sr = sr;
 
 		go.transform.position = _position;
